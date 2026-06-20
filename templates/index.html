@@ -5,79 +5,117 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <script src="https://unpkg.com/vue@next"></script>
-    
-    <title>Coins</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <title>Real-Time Crypto Dashboard</title>
+
     <style>
         .fall {
-            color:red;
+            color: red;
+            font-weight: bold;
         }
+
         .raise {
             color: limegreen;
+            font-weight: bold;
+        }
+
+        .same {
+            color: #333;
+        }
+
+        .coin-image {
+            width: 40px;
+            height: 40px;
         }
     </style>
 </head>
 <body>
-
     <div class="container">
         <div class="row">
             <div class="col-8 mx-auto mt-5">
-                <h3 class="mb-5">Crypto currencies</h3>
+                <h3 class="mb-3">Real-Time Crypto Dashboard</h3>
+                <p class="text-muted">
+                    Live cryptocurrency prices broadcast through Django Channels and WebSockets.
+                </p>
+
                 {% verbatim %}
                 <div id="app">
-                {{ message }}
-                <table class="table table-hover">
-                <thead>
-                <tr><th scope="col">Image</th><th scope="col">Name</th><th scope="col">Price</th></tr>
-                </thead>
-                <tbody>
-                    
-                <tr v-for="coin in coins" :key="coin.id">
-                    <td class="align-middle"><img :src="coin.image" alt="" class="px-2" width="50"></td>
-                    <td class="align-middle">{{ coin.name }}</td>
-                    <td class="align-middle" :class="{'raise': coin.state === 'raise', 'fall': coin.state === 'fall'}">{{ coin.price }}</td>
-                </tr>
-                
-                </tbody>
-            </table>
-            </div>
-            {% endverbatim %}
+                    <div class="alert alert-info" role="alert">
+                        {{ message }}
+                    </div>
+
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Image</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Price</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr v-if="coins.length === 0">
+                                <td colspan="3" class="text-center text-muted">
+                                    Waiting for live crypto data...
+                                </td>
+                            </tr>
+
+                            <tr v-for="coin in coins" :key="coin.id">
+                                <td class="align-middle">
+                                    <img :src="coin.image" :alt="coin.name" class="coin-image">
+                                </td>
+                                <td class="align-middle">
+                                    {{ coin.name }}
+                                </td>
+                                <td class="align-middle" :class="coin.state">
+                                    ${{ coin.price }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                {% endverbatim %}
             </div>
         </div>
     </div>
 
+    <script>
+        const { createApp } = Vue;
 
-      <h3 id="jokeul"></h3>
-        <script>
-            const { createApp } = Vue;
-            const CoinsApp = {
-                data() {
-                    return {
-                        message: "Live Data",
-                        coins: null
-                    }
-                },
-                created() {
-                    const socket = new WebSocket(`ws://${window.location.host}/ws/some_url/`);
-                    let _this = this; // because socket.onmessage has its own this
-                    socket.onmessage = function(event){
-                    _this.coins = JSON.parse(event.data)
-                    // console.log(djangoData[0]['price'])
-                    // var joke = event.data;
-                    // document.querySelector('#jokeul').innerText = joke;
+        const CoinsApp = {
+            data() {
+                return {
+                    message: "Waiting for WebSocket updates...",
+                    coins: []
+                };
+            },
+            created() {
+                const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+                const socket = new WebSocket(`${protocol}://${window.location.host}/ws/some_url/`);
+
+                socket.onopen = () => {
+                    this.message = "Connected. Waiting for live crypto data...";
+                };
+
+                socket.onmessage = (event) => {
+                    this.coins = JSON.parse(event.data);
+                    this.message = "Live data received.";
+                };
+
+                socket.onerror = () => {
+                    this.message = "WebSocket connection error.";
+                };
+
+                socket.onclose = () => {
+                    this.message = "WebSocket connection closed.";
+                };
             }
-                }
-            }
-            createApp(CoinsApp).mount('#app')
-            //var socket = new WebSocket('ws://127.0.0.1:8000/ws/some_url/'); 
-            // socket.onmessage = function(event){
-            //     var djangoData = JSON.parse(event.data)
-            //     console.log(djangoData[0]['price'])
-            //     var joke = event.data;
-            //     document.querySelector('#jokeul').innerText = joke;
-            // }
-        </script>
+        };
+
+        createApp(CoinsApp).mount("#app");
+    </script>
 </body>
 </html>
