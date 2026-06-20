@@ -40,4 +40,3 @@ def fetch_crypto_prices():
     #print(coins)
     # Channel_layer is an async function.
     async_to_sync(channel_layer.group_send)('coins', {'type':'send_new_data', 'text':coins})
-    #return joke
