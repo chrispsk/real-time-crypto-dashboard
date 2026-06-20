@@ -1,6 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 import random
-from celery.decorators import task
+from celery import shared_task
 import json
 import requests
 from channels.layers import get_channel_layer
@@ -9,7 +9,7 @@ from .models import Coin
 
 channel_layer = get_channel_layer()
 
-@task(name="get_the_joke")
+@shared_task(name="get_the_joke")
 def get_joke():
     url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=7&page=1&sparkline=false'
     response = requests.get(url).json()
