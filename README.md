@@ -267,8 +267,6 @@ This will create a local SQLite database:
 db.sqlite3
 ```
 
-The local database should not be committed to GitHub.
-
 ## Running the Project
 
 This project needs four running processes:
