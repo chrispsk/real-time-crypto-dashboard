@@ -14,10 +14,7 @@ Instead of requiring users to manually refresh the page, the backend fetches new
 
 The project uses the CoinGecko API to fetch live cryptocurrency market data.
 
-Endpoint used:
-
-```text
-https://api.coingecko.com/api/v3/coins/markets
+Endpoint used: https://api.coingecko.com/api/v3/coins/markets
 
 ## Real-Time Flow
 
