@@ -8,7 +8,7 @@ The application periodically fetches cryptocurrency market data from the CoinGec
 
 This project demonstrates a real-time data broadcasting architecture.
 
-Instead of requiring users to manually refresh the page, the backend fetches updated cryptocurrency prices on a schedule and pushes the new data to all connected clients automatically.
+Instead of requiring users to manually refresh the page, the backend fetches updated cryptocurrency prices on a schedule and broadcast the new data to all connected clients automatically.
 
 ## Real-Time Flow
 
