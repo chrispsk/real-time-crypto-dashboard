@@ -3,6 +3,11 @@
 A real-time cryptocurrency dashboard built with Django, Django Channels, WebSockets, Celery Beat, Redis, and Vue.js.
 
 The application periodically fetches cryptocurrency market data from the CoinGecko API, processes it in the background with Celery, and broadcasts live updates to connected browser clients using Django Channels and WebSockets.
+## Screenshot
+
+### Live Crypto Price Updates
+
+![Real-Time Crypto Dashboard showing live cryptocurrency prices](screenshots/coin.png)
 
 ## Overview
 
