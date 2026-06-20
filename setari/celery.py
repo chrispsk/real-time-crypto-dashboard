@@ -9,8 +9,8 @@ app = Celery('setari')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 app.conf.beat_schedule = { # If I use celery-beat
-    'get-joke-every-20-seconds': {
-        'task': 'get_the_joke',
+    'fetch-crypto-prices-every-20-seconds': {
+        'task': 'fetch_crypto_prices',
         'schedule': 20.0
     }
 }
