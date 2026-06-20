@@ -9,8 +9,8 @@ from .models import Coin
 
 channel_layer = get_channel_layer()
 
-@shared_task(name="get_the_joke")
-def get_joke():
+@shared_task(name="fetch_crypto_prices")
+def fetch_crypto_prices():
     url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=7&page=1&sparkline=false'
     response = requests.get(url).json()
     coins = list()
